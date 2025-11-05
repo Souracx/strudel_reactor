@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StrudelMirror } from '@strudel/codemirror';
 import { evalScope } from '@strudel/core';
 import { drawPianoroll } from '@strudel/draw';
@@ -9,6 +9,10 @@ import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/w
 import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
 import console_monkey_patch, { getD3Data } from './console-monkey-patch';
+import PlayButtons from './components/PlayButtons';
+import ProcButtons from './components/ProcButtons';
+import PreprocessTextArea from './components/PreprocessTextArea';
+import DJControls from './components/DJControls';
 
 let globalEditor = null;
 
@@ -107,24 +111,21 @@ useEffect(() => {
 
 
 return (
-    <div>
-        <h2>Strudel Demo</h2>
+    <div style={{backgroundColor: 'rgb(18,3,3)'}}>
+        <h2 style={{color: '#30B3A5'}}>Strudel Demo</h2>
         <main>
 
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Text to preprocess:</label>
-                        <textarea className="form-control" rows="15" id="proc" ></textarea>
+                        <PreprocessTextArea/> 
                     </div>
                     <div className="col-md-4">
 
                         <nav>
-                            <button id="process" className="btn btn-outline-primary">Preprocess</button>
-                            <button id="process_play" className="btn btn-outline-primary">Proc & Play</button>
+                            <ProcButtons/>
                             <br />
-                            <button id="play" className="btn btn-outline-primary">Play</button>
-                            <button id="stop" className="btn btn-outline-primary">Stop</button>
+                            <PlayButtons/> 
                         </nav>
                     </div>
                 </div>
@@ -146,6 +147,7 @@ return (
                                 p1: HUSH
                             </label>
                         </div>
+                        <DJControls/>
                     </div>
                 </div>
             </div>
