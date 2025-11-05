@@ -20,54 +20,77 @@ const handleD3Data = (event) => {
     console.log(event.detail);
 };
 
-export function SetupButtons() {
+// export function SetupButtons() {
 
-    document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
-    document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
-    document.getElementById('process').addEventListener('click', () => {
-        Proc()
-    }
-    )
-    document.getElementById('process_play').addEventListener('click', () => {
-        if (globalEditor != null) {
-            Proc()
-            globalEditor.evaluate()
-        }
-    }
-    )
-}
+//     document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
+//     document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
+//     document.getElementById('process').addEventListener('click', () => {
+//         Proc()
+//     }
+//     )
+//     document.getElementById('process_play').addEventListener('click', () => {
+//         if (globalEditor != null) {
+//             Proc()
+//             globalEditor.evaluate()
+//         }
+//     }
+//     )
+// }
 
 
 
-export function ProcAndPlay() {
-    if (globalEditor != null && globalEditor.repl.state.started == true) {
-        console.log(globalEditor)
-        Proc()
-        globalEditor.evaluate();
-    }
-}
 
-export function Proc() {
+// export function ProcAndPlay() {
+//     if (globalEditor != null && globalEditor.repl.state.started == true) {
+//         console.log(globalEditor)
+//         Proc()
+//         globalEditor.evaluate();
+//     }
+// }
 
-    let proc_text = document.getElementById('proc').value
-    let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
-    ProcessText(proc_text);
-    globalEditor.setCode(proc_text_replaced)
-}
+// export function Proc() {
 
-export function ProcessText(match, ...args) {
+//     let proc_text = document.getElementById('proc').value
+//     let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
+//     ProcessText(proc_text);
+//     globalEditor.setCode(proc_text_replaced)
+// }
 
-    let replace = ""
-    if (document.getElementById('flexRadioDefault2').checked) {
-        replace = "_"
-    }
+// export function ProcessText(match, ...args) {
 
-    return replace
-}
+//     let replace = ""
+//     if (document.getElementById('flexRadioDefault2').checked) {
+//         replace = "_"
+//     }
+
+//     return replace
+// }
 
 export default function StrudelDemo() {
 
-const hasRun = useRef(false);
+    const hasRun = useRef(false);
+
+    const handlePlay = () => {
+        globalEditor.evaluate()
+    }
+
+    const handleStop = () => {
+        globalEditor.stop() 
+    }
+
+    const [songText, setSongText] = useState(stranger_tune)
+
+    const handleProcess = () => { 
+        if(globalEditor){
+        globalEditor.setCode(songText); }
+    }
+
+    const handleProcessAndPlay = () => {
+        if (globalEditor) {
+            globalEditor.setCode(songText);
+            globalEditor.evaluate();
+          }
+    }
 
 useEffect(() => {
 
@@ -103,11 +126,11 @@ useEffect(() => {
             });
             
         document.getElementById('proc').value = stranger_tune
-        SetupButtons()
-        Proc()
+        // SetupButtons()
+        // Proc()
     }
-
-}, []);
+    globalEditor.setCode(songText); 
+}, [songText]);
 
 
 return (
@@ -118,14 +141,13 @@ return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <PreprocessTextArea/> 
+                        <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
                     </div>
                     <div className="col-md-4">
-
                         <nav>
-                            <ProcButtons/>
+                            <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
                             <br />
-                            <PlayButtons/> 
+                            <PlayButtons onPlay={handlePlay} onStop={handleStop}/> 
                         </nav>
                     </div>
                 </div>
@@ -135,7 +157,7 @@ return (
                         <div id="output" />
                     </div>
                     <div className="col-md-4">
-                        <div className="form-check">
+                        {/* <div className="form-check">
                             <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={ProcAndPlay} defaultChecked />
                             <label className="form-check-label" htmlFor="flexRadioDefault1">
                                 p1: ON
@@ -146,7 +168,7 @@ return (
                             <label className="form-check-label" htmlFor="flexRadioDefault2">
                                 p1: HUSH
                             </label>
-                        </div>
+                        </div> */}
                         <DJControls/>
                     </div>
                 </div>
