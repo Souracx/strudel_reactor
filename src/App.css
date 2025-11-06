@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+h2 {
+  color: #30B3A5;
+  font-family: 'Orbitron', sans-serif;
+  text-shadow: 0 0 12px rgba(48, 179, 165, 0.7);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 2.2rem;
+  transition: all 0.3s ease-in-out;
+}
+
+h2:hover {
+  color: #4df5dd;
+  text-shadow: 0 0 20px rgba(48, 179, 165, 0.9);
+  transform: scale(1.05);
+}
+
+.custom-card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #2a2a2a;
+}
+
+.text-component{
+  color: #30B3A5;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600; 
+}

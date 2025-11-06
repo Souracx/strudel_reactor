@@ -13,58 +13,15 @@ import PlayButtons from './components/PlayButtons';
 import ProcButtons from './components/ProcButtons';
 import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
+import { GrPowerReset } from "react-icons/gr";
+
+
 
 let globalEditor = null;
 
 const handleD3Data = (event) => {
     console.log(event.detail);
 };
-
-// export function SetupButtons() {
-
-//     document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
-//     document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
-//     document.getElementById('process').addEventListener('click', () => {
-//         Proc()
-//     }
-//     )
-//     document.getElementById('process_play').addEventListener('click', () => {
-//         if (globalEditor != null) {
-//             Proc()
-//             globalEditor.evaluate()
-//         }
-//     }
-//     )
-// }
-
-
-
-
-// export function ProcAndPlay() {
-//     if (globalEditor != null && globalEditor.repl.state.started == true) {
-//         console.log(globalEditor)
-//         Proc()
-//         globalEditor.evaluate();
-//     }
-// }
-
-// export function Proc() {
-
-//     let proc_text = document.getElementById('proc').value
-//     let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
-//     ProcessText(proc_text);
-//     globalEditor.setCode(proc_text_replaced)
-// }
-
-// export function ProcessText(match, ...args) {
-
-//     let replace = ""
-//     if (document.getElementById('flexRadioDefault2').checked) {
-//         replace = "_"
-//     }
-
-//     return replace
-// }
 
 export default function StrudelDemo() {
 
@@ -90,6 +47,36 @@ export default function StrudelDemo() {
             globalEditor.setCode(songText);
             globalEditor.evaluate();
           }
+    }
+
+    const [cpm, setCpm] = useState(120); 
+
+    const handleCpm = (newValue) => {
+        const newCpm = Number(newValue);
+
+        setCpm(newCpm); 
+        const cps = newCpm / 60 / 4;
+        const updatedSong = songText.replace(/setcps\([^)]+\)/, `setcps(${cps})`);
+        setSongText(updatedSong);
+        
+        if (globalEditor) {
+            globalEditor.setCode(updatedSong);
+            if (globalEditor.repl?.state?.started) {
+                globalEditor.evaluate();
+            }
+        }
+ };
+
+    const [volume, setVolume] = useState(0.7); 
+
+    const handleVolume = (newValue) => { 
+        const newVolume = Number(newValue); 
+        setVolume(newVolume); 
+
+        if(globalEditor && globalEditor.repl){
+            globalEditor.evaluate(`gain(${newVolume})`); 
+        }
+    
     }
 
 useEffect(() => {
@@ -137,43 +124,49 @@ return (
     <div style={{backgroundColor: 'rgb(18,3,3)'}}>
         <h2 style={{color: '#30B3A5'}}>Strudel Demo</h2>
         <main>
-
             <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
+                <div className="row g-3 mb-3">
+                    <div className="col-lg-8">
+                        <div className="custom-card">
+                            <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
+                        </div>
                     </div>
-                    <div className="col-md-4">
-                        <nav>
+                    <div className="col-lg-4">
+                        <div className='custom-card'>
+                        <label htmlFor="Preprocessing" className="form-label text-component">Preprocessing</label>
+                            <br/> 
                             <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
+                        </div>
                             <br />
+                        <div className='custom-card'>
+                        <label htmlFor="Preprocessing" className="form-label text-component">Playback</label>
+                            <br/> 
                             <PlayButtons onPlay={handlePlay} onStop={handleStop}/> 
-                        </nav>
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <div id="editor" />
-                        <div id="output" />
+                <div className="row g-3">
+                    <div className="col-lg-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                        <div className='custom-card'>
+                            <div id="editor" />
+                            <div id="output" />
+                        </div> 
                     </div>
-                    <div className="col-md-4">
-                        {/* <div className="form-check">
-                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={ProcAndPlay} defaultChecked />
-                            <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                p1: ON
-                            </label>
+                    <div className="col-lg-4">
+                        <div className='custom-card'>
+                            <label htmlFor='DJControls' className='form label text-component'>DJ Controls</label>
+                            <DJControls cpm={cpm} onCpmChange={handleCpm} volume={volume} onVolumeChange={handleVolume}/>
+                            <GrPowerReset />
+
                         </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={ProcAndPlay} />
-                            <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                p1: HUSH
-                            </label>
-                        </div> */}
-                        <DJControls/>
                     </div>
                 </div>
             </div>
-            <canvas id="roll"></canvas>
+            <div className='row g-3 mt-3'>
+                <div className='custom-card'> 
+                <canvas id="roll"></canvas>
+                </div>
+            </div>
         </main >
     </div >
 );
