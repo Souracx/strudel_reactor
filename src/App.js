@@ -13,9 +13,8 @@ import PlayButtons from './components/PlayButtons';
 import ProcButtons from './components/ProcButtons';
 import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
-import { GrPowerReset } from "react-icons/gr";
-
-
+import VolumeSlider from './components/VolumeSlider';
+import TogglePlayButton from './components/TogglePlayButton';
 
 let globalEditor = null;
 
@@ -65,22 +64,12 @@ export default function StrudelDemo() {
                 globalEditor.evaluate();
             }
         }
- };
-
-    const [volume, setVolume] = useState(0.7); 
-
-    const handleVolume = (newValue) => { 
-        const newVolume = Number(newValue); 
-        setVolume(newVolume); 
-
-        if(globalEditor && globalEditor.repl){
-            globalEditor.evaluate(`gain(${newVolume})`); 
-        }
-    
     }
 
-useEffect(() => {
 
+
+
+useEffect(() => {
     if (!hasRun.current) {
         document.addEventListener("d3Data", handleD3Data);
         console_monkey_patch();
@@ -128,7 +117,11 @@ return (
                 <div className="row g-3 mb-3">
                     <div className="col-lg-8">
                         <div className="custom-card">
-                            <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
+                             <label htmlFor="exampleFormControlTextarea1" className="form-label text-component" >Text to preprocess:</label>
+                             <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
+                             {/* <PlayButtons onPlay={handlePlay} onStop={handleStop}/>  */}
+                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop}/>                            
+                             <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
                         </div>
                     </div>
                     <div className="col-lg-4">
@@ -155,9 +148,8 @@ return (
                     <div className="col-lg-4">
                         <div className='custom-card'>
                             <label htmlFor='DJControls' className='form label text-component'>DJ Controls</label>
-                            <DJControls cpm={cpm} onCpmChange={handleCpm} volume={volume} onVolumeChange={handleVolume}/>
-                            <GrPowerReset />
-
+                            <DJControls cpm={cpm} onCpmChange={handleCpm}/>
+                            <VolumeSlider /> 
                         </div>
                     </div>
                 </div>

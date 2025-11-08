@@ -40,7 +40,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 h2 {
   color: #30B3A5;
-  font-family: 'Orbitron', sans-serif;
+  font-family:  sans-serif;
   text-shadow: 0 0 12px rgba(48, 179, 165, 0.7);
   letter-spacing: 2px;
   text-align: center;
@@ -67,4 +67,35 @@ h2:hover {
   margin-bottom: 15px;
   font-size: 1.1rem;
   font-weight: 600; 
+}
+
+.toggle-play-btn {
+  border: 2px solid;
+  font-weight: 600;
+  padding: 8px 20px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 8px;
+  background-color: transparent;
+}
+
+.toggle-play-btn.playing {
+  border-color: #ff4757;
+  color: #ff4757;
+}
+
+.toggle-play-btn.playing:hover {
+  background-color: rgba(255, 71, 87, 0.1);
+}
+
+.toggle-play-btn.stopped {
+  border-color: #30B3A5;
+  color: #30B3A5;
+}
+
+.toggle-play-btn.stopped:hover {
+  background-color: rgba(48, 179, 165, 0.1);
 }
