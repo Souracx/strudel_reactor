@@ -15,6 +15,7 @@ import DJControls from './components/DJControls';
 import VolumeSlider from './components/VolumeSlider';
 import TogglePlayButton from './components/TogglePlayButton';
 import NotificationPopUp from './components/Notification';
+import ToggleSwitch from './components/ToggleSwitch';
 
 let globalEditor = null;
 
@@ -27,6 +28,7 @@ export default function StrudelDemo() {
     const hasRun = useRef(false);
 
     const [isPlaying, setIsPlaying] = useState(false); 
+    
     const handlePlay = () => {
         //check for empty code 
         if(!songText || songText.trim() == ''){
@@ -56,6 +58,7 @@ export default function StrudelDemo() {
     }
 
     const [songText, setSongText] = useState(stranger_tune)
+
     const handleProcess = () => { 
         if(globalEditor){
         globalEditor.setCode(songText); }
@@ -63,6 +66,7 @@ export default function StrudelDemo() {
 
     const handleProcessAndPlay = () => {
         if (globalEditor) {
+            setIsPlaying(true)
             globalEditor.setCode(songText);
             globalEditor.evaluate();
           }
@@ -86,6 +90,8 @@ export default function StrudelDemo() {
         }
     }
 
+    //handles text hiding 
+    const[showPreprocessor, setShowPreprocessor] = useState(true); 
 
 
 
@@ -139,8 +145,9 @@ return (
                         <div className="custom-card">
                              <label htmlFor="exampleFormControlTextarea1" className="form-label text-component" >Text to preprocess:</label>
                              <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop} isPlaying={isPlaying}/>                            
-                             <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
+                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop} isPlaying={isPlaying}/>                           
+                            <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)} label={showPreprocessor ? 'Hide' : 'Show'}/>          
+                             {showPreprocessor && <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>}
                         </div>
                     </div>
                     <div className="col-lg-4">
