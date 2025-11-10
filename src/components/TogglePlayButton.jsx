@@ -1,15 +1,14 @@
-import { useState } from 'react';
 
-function TogglePlayButton({onPlay, onStop}) { 
-    const [isPlaying, setIsPlaying] = useState(false);
+function TogglePlayButton({onPlay, onStop, isPlaying}) { 
+   
 
     const handleToggle = () => {
         if (isPlaying) {
             onStop();
-            setIsPlaying(false);
+            
         } else {
             onPlay();
-            setIsPlaying(true);
+            
         }
     };
 
@@ -18,7 +17,7 @@ function TogglePlayButton({onPlay, onStop}) {
             className={`toggle-play-btn ${isPlaying ? 'playing' : 'stopped'}`}
             onClick={handleToggle}
         >
-            {isPlaying ? '■ ' : '▶ '}
+            {isPlaying ? '■ stop' : '▶ play'}
         </button>
     ); 
 }

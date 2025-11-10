@@ -14,7 +14,6 @@ import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
 import VolumeSlider from './components/VolumeSlider';
 import TogglePlayButton from './components/TogglePlayButton';
-import NotificationToast from './components/Notification';
 import NotificationPopUp from './components/Notification';
 
 let globalEditor = null;
@@ -27,13 +26,21 @@ export default function StrudelDemo() {
 
     const hasRun = useRef(false);
 
+    const [isPlaying, setIsPlaying] = useState(false); 
     const handlePlay = () => {
+        //check for empty code 
+        if(!songText || songText.trim() == ''){
+            showNotification('Please add some code first','error'); 
+            return; 
+        }
         globalEditor.evaluate()
+        setIsPlaying(true); 
         showNotification('Playback started!', 'success');
     }
 
     const handleStop = () => {
         globalEditor.stop() 
+        setIsPlaying(false); 
         showNotification('Paused','success')
     }
 
@@ -132,7 +139,7 @@ return (
                         <div className="custom-card">
                              <label htmlFor="exampleFormControlTextarea1" className="form-label text-component" >Text to preprocess:</label>
                              <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop}/>                            
+                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop} isPlaying={isPlaying}/>                            
                              <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
                         </div>
                     </div>
@@ -141,11 +148,6 @@ return (
                         <label htmlFor="Preprocessing" className="form-label text-component">Preprocessing</label>
                             <br/> 
                             <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                        </div>
-                            <br />
-                        <div className='custom-card'>
-                        <label htmlFor="Preprocessing" className="form-label text-component">Playback</label>
-                            <br/> 
                         </div>
                     </div>
                 </div>
