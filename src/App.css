@@ -99,3 +99,46 @@ h2:hover {
 .toggle-play-btn.stopped:hover {
   background-color: rgba(48, 179, 165, 0.1);
 }
+
+/* Notification Popup Styles */
+.notification-popup-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 0;
+  z-index: 9999;
+  max-width: 300px;
+}
+
+.notification-popup {
+  min-width: 250px;
+  max-width: 300px;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.notification-popup-header {
+  padding: 0.5rem 1rem;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.notification-popup-body {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.notification-popup.success {
+  background-color: #30B3A5;
+}
+
+.notification-popup.error {
+  background-color: #ff4757;
+}
+
+.notification-popup.warning {
+  background-color: #ffa502;
+}

@@ -18,7 +18,7 @@ function TogglePlayButton({onPlay, onStop}) {
             className={`toggle-play-btn ${isPlaying ? 'playing' : 'stopped'}`}
             onClick={handleToggle}
         >
-            {isPlaying ? '■' : '▶ '}
+            {isPlaying ? '■ ' : '▶ '}
         </button>
     ); 
 }

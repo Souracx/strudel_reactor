@@ -9,12 +9,13 @@ import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/w
 import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
 import console_monkey_patch, { getD3Data } from './console-monkey-patch';
-import PlayButtons from './components/PlayButtons';
 import ProcButtons from './components/ProcButtons';
 import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
 import VolumeSlider from './components/VolumeSlider';
 import TogglePlayButton from './components/TogglePlayButton';
+import NotificationToast from './components/Notification';
+import NotificationPopUp from './components/Notification';
 
 let globalEditor = null;
 
@@ -28,14 +29,26 @@ export default function StrudelDemo() {
 
     const handlePlay = () => {
         globalEditor.evaluate()
+        showNotification('Playback started!', 'success');
     }
 
     const handleStop = () => {
         globalEditor.stop() 
+        showNotification('Paused','success')
+    }
+
+    //notification 
+    const[notification, setNotification] = useState({show: false, message:'', type:'success'}); 
+
+    //notification helper 
+    const showNotification = (message, type = 'success') => {
+        setNotification({show: true, message, type}); 
+        setTimeout(() => {
+            setNotification({show:false, message:'', type:'success'}); //resetting to original state 
+        }, 2000); 
     }
 
     const [songText, setSongText] = useState(stranger_tune)
-
     const handleProcess = () => { 
         if(globalEditor){
         globalEditor.setCode(songText); }
@@ -119,7 +132,6 @@ return (
                         <div className="custom-card">
                              <label htmlFor="exampleFormControlTextarea1" className="form-label text-component" >Text to preprocess:</label>
                              <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                             {/* <PlayButtons onPlay={handlePlay} onStop={handleStop}/>  */}
                              <TogglePlayButton onPlay={handlePlay} onStop={handleStop}/>                            
                              <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/> 
                         </div>
@@ -134,7 +146,6 @@ return (
                         <div className='custom-card'>
                         <label htmlFor="Preprocessing" className="form-label text-component">Playback</label>
                             <br/> 
-                            <PlayButtons onPlay={handlePlay} onStop={handleStop}/> 
                         </div>
                     </div>
                 </div>
@@ -152,7 +163,9 @@ return (
                             <VolumeSlider /> 
                         </div>
                     </div>
+                   
                 </div>
+                
             </div>
             <div className='row g-3 mt-3'>
                 <div className='custom-card'> 
@@ -160,6 +173,7 @@ return (
                 </div>
             </div>
         </main >
+        <NotificationPopUp message={notification.message} type={notification.type} show={notification.show}/> 
     </div >
 );
 
