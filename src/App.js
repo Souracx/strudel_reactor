@@ -1,14 +1,6 @@
 import './App.css';
 import { useEffect, useRef, useState } from "react";
-import { StrudelMirror } from '@strudel/codemirror';
-import { evalScope } from '@strudel/core';
-import { drawPianoroll } from '@strudel/draw';
-import { initAudioOnFirstClick } from '@strudel/webaudio';
-import { transpiler } from '@strudel/transpiler';
-import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/webaudio';
-import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
-import console_monkey_patch, { getD3Data } from './console-monkey-patch';
 import ProcButtons from './components/ProcButtons';
 import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
@@ -16,175 +8,123 @@ import VolumeSlider from './components/VolumeSlider';
 import TogglePlayButton from './components/TogglePlayButton';
 import NotificationPopUp from './components/Notification';
 import ToggleSwitch from './components/ToggleSwitch';
-
-let globalEditor = null;
-
-const handleD3Data = (event) => {
-    console.log(event.detail);
-};
+import { initializeStrudel, getGlobalEditor } from './strudel.js';
 
 export default function StrudelDemo() {
-
     const hasRun = useRef(false);
-
+    const [globalEditor, setGlobalEditor] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false); 
-    
-    const handlePlay = () => {
-        //check for empty code 
-        if(!songText || songText.trim() == ''){
-            showNotification('Please add some code first','error'); 
-            return; 
-        }
-        globalEditor.evaluate()
-        setIsPlaying(true); 
-        showNotification('Playback started!', 'success');
-    }
+    const [songText, setSongText] = useState(stranger_tune);
+    const [showPreprocessor, setShowPreprocessor] = useState(true);         // Handles preprocessor hiding 
+    const [notification, setNotification] = useState({show: false, message:'', type:'success'});     // Notification 
+    const [cpm, setCpm] = useState(120); 
 
-    const handleStop = () => {
-        globalEditor.stop() 
-        setIsPlaying(false); 
-        showNotification('Paused','success')
-    }
 
-    //notification 
-    const[notification, setNotification] = useState({show: false, message:'', type:'success'}); 
-
-    //notification helper 
+    // Notification helper 
     const showNotification = (message, type = 'success') => {
         setNotification({show: true, message, type}); 
         setTimeout(() => {
-            setNotification({show:false, message:'', type:'success'}); //resetting to original state 
+            setNotification({show:false, message:'', type:'success'});
         }, 2000); 
-    }
-
-    const [songText, setSongText] = useState(stranger_tune)
+    };
 
     const handleProcess = () => { 
-        if(globalEditor){
-        globalEditor.setCode(songText); }
-    }
+        const editor = getGlobalEditor();
+        if (editor) {
+            editor.setCode(songText);
+        }
+    };
 
     const handleProcessAndPlay = () => {
-        if (globalEditor) {
-            setIsPlaying(true)
-            globalEditor.setCode(songText);
-            globalEditor.evaluate();
-          }
-    }
-
-    const [cpm, setCpm] = useState(120); 
+        const editor = getGlobalEditor();
+        if (editor) {
+            setIsPlaying(true);
+            editor.setCode(songText);
+            editor.evaluate();
+        }
+    };
 
     const handleCpm = (newValue) => {
         const newCpm = Number(newValue);
-
         setCpm(newCpm); 
         const cps = newCpm / 60 / 4;
         const updatedSong = songText.replace(/setcps\([^)]+\)/, `setcps(${cps})`);
         setSongText(updatedSong);
         
-        if (globalEditor) {
-            globalEditor.setCode(updatedSong);
-            if (globalEditor.repl?.state?.started) {
-                globalEditor.evaluate();
+        const editor = getGlobalEditor();
+        if (editor) {
+            editor.setCode(updatedSong);
+            if (editor.repl?.state?.started) {
+                editor.evaluate();
             }
         }
-    }
+    };
 
-    //handles text hiding 
-    const[showPreprocessor, setShowPreprocessor] = useState(true); 
-
-
-
-useEffect(() => {
-    if (!hasRun.current) {
-        document.addEventListener("d3Data", handleD3Data);
-        console_monkey_patch();
-        hasRun.current = true;
-        //Code copied from example: https://codeberg.org/uzu/strudel/src/branch/main/examples/codemirror-repl
-            //init canvas
-            const canvas = document.getElementById('roll');
-            canvas.width = canvas.width * 2;
-            canvas.height = canvas.height * 2;
-            const drawContext = canvas.getContext('2d');
-            const drawTime = [-2, 2]; // time window of drawn haps
-            globalEditor = new StrudelMirror({
-                defaultOutput: webaudioOutput,
-                getTime: () => getAudioContext().currentTime,
-                transpiler,
-                root: document.getElementById('editor'),
-                drawTime,
-                onDraw: (haps, time) => drawPianoroll({ haps, time, ctx: drawContext, drawTime, fold: 0 }),
-                prebake: async () => {
-                    initAudioOnFirstClick(); // needed to make the browser happy (don't await this here..)
-                    const loadModules = evalScope(
-                        import('@strudel/core'),
-                        import('@strudel/draw'),
-                        import('@strudel/mini'),
-                        import('@strudel/tonal'),
-                        import('@strudel/webaudio'),
-                    );
-                    await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
-                },
-            });
+    useEffect(() => {
+        if (!hasRun.current) {
+            hasRun.current = true;
             
-        document.getElementById('proc').value = stranger_tune
-        // SetupButtons()
-        // Proc()
-    }
-    globalEditor.setCode(songText); 
-}, [songText]);
+            // Initialize Strudel editor
+            const editor = initializeStrudel();
+            setGlobalEditor(editor);
+            
+            // Set initial value in textarea
+            document.getElementById('proc').value = stranger_tune;
+        }
+        
+        // Update editor code when songText changes
+        const editor = getGlobalEditor();
+        if (editor) {
+            editor.setCode(songText);
+        }
+    }, [songText]);
 
-
-return (
-    <div style={{backgroundColor: 'rgb(18,3,3)'}}>
-        <h2 style={{color: '#30B3A5'}}>Strudel Demo</h2>
-        <main>
-            <div className="container-fluid">
-                <div className="row g-3 mb-3">
-                    <div className="col-lg-8">
-                        <div className="custom-card">
-                             <label htmlFor="exampleFormControlTextarea1" className="form-label text-component" >Text to preprocess:</label>
-                             <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                             <TogglePlayButton onPlay={handlePlay} onStop={handleStop} isPlaying={isPlaying}/>                           
-                            <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)} label={showPreprocessor ? 'Hide' : 'Show'}/>          
-                             {showPreprocessor && <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>}
+    return (
+        <div style={{backgroundColor: 'rgb(18,3,3)'}}>
+            <h2 style={{color: '#30B3A5'}}>Strudel Demo</h2>
+            <main>
+                <div className="container-fluid">
+                    <div className="row g-3 mb-3">
+                        <div className="col-lg-8">
+                            <div className="custom-card">
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label text-component">
+                                    Text to preprocess:
+                                </label>
+                                <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
+                                <TogglePlayButton globalEditor={globalEditor} songText={songText} isPlaying={isPlaying} setIsPlaying={setIsPlaying} showNotification={showNotification}/>                           
+                                <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)}label={showPreprocessor ? 'Hide' : 'Show'}/>          
+                                {showPreprocessor && (<PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>)}
+                            </div>
+                        </div>
+                        <div className="col-lg-4">
                         </div>
                     </div>
-                    <div className="col-lg-4">
-                        <div className='custom-card'>
-                        <label htmlFor="Preprocessing" className="form-label text-component">Preprocessing</label>
-                            <br/> 
-                            <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
+                    <div className="row g-3">
+                        <div className="col-lg-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <div className='custom-card'>
+                                <div id="editor" />
+                                <div id="output" />
+                            </div> 
+                        </div>
+                        <div className="col-lg-4">
+                            <div className='custom-card'>
+                                <label htmlFor='DJControls' className='form label text-component'>
+                                    DJ Controls
+                                </label>
+                                <DJControls cpm={cpm} onCpmChange={handleCpm}/>
+                                <VolumeSlider /> 
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="row g-3">
-                    <div className="col-lg-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <div className='custom-card'>
-                            <div id="editor" />
-                            <div id="output" />
-                        </div> 
+                <div className='row g-3 mt-3'>
+                    <div className='custom-card'> 
+                        <canvas id="roll"></canvas>
                     </div>
-                    <div className="col-lg-4">
-                        <div className='custom-card'>
-                            <label htmlFor='DJControls' className='form label text-component'>DJ Controls</label>
-                            <DJControls cpm={cpm} onCpmChange={handleCpm}/>
-                            <VolumeSlider /> 
-                        </div>
-                    </div>
-                   
                 </div>
-                
-            </div>
-            <div className='row g-3 mt-3'>
-                <div className='custom-card'> 
-                <canvas id="roll"></canvas>
-                </div>
-            </div>
-        </main >
-        <NotificationPopUp message={notification.message} type={notification.type} show={notification.show}/> 
-    </div >
-);
-
-
+            </main>
+            <NotificationPopUp message={notification.message} type={notification.type} show={notification.show}
+            /> 
+        </div>
+    );
 }
