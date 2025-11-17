@@ -10,6 +10,7 @@ import NotificationPopUp from './components/Notification';
 import ToggleSwitch from './components/ToggleSwitch';
 import { initializeStrudel, getGlobalEditor } from './strudel.js';
 
+
 export default function StrudelDemo() {
     const hasRun = useRef(false);
     const [globalEditor, setGlobalEditor] = useState(null);
@@ -67,7 +68,6 @@ export default function StrudelDemo() {
             // Initialize Strudel editor
             const editor = initializeStrudel();
             setGlobalEditor(editor);
-            
             // Set initial value in textarea
             document.getElementById('proc').value = stranger_tune;
         }
@@ -112,6 +112,7 @@ export default function StrudelDemo() {
                                     DJ Controls
                                 </label>
                                 <DJControls cpm={cpm} onCpmChange={handleCpm}/>
+                            
                                 <VolumeSlider /> 
                             </div>
                         </div>
