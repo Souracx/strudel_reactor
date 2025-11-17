@@ -4,7 +4,6 @@ import { stranger_tune } from './tunes';
 import ProcButtons from './components/ProcButtons';
 import PreprocessTextArea from './components/PreprocessTextArea';
 import DJControls from './components/DJControls';
-import VolumeSlider from './components/VolumeSlider';
 import TogglePlayButton from './components/TogglePlayButton';
 import NotificationPopUp from './components/Notification';
 import ToggleSwitch from './components/ToggleSwitch';
@@ -18,7 +17,6 @@ export default function StrudelDemo() {
     const [songText, setSongText] = useState(stranger_tune);
     const [showPreprocessor, setShowPreprocessor] = useState(true);         // Handles preprocessor hiding 
     const [notification, setNotification] = useState({show: false, message:'', type:'success'});     // Notification 
-    const [cpm, setCpm] = useState(120); 
 
 
     // Notification helper 
@@ -42,22 +40,6 @@ export default function StrudelDemo() {
             setIsPlaying(true);
             editor.setCode(songText);
             editor.evaluate();
-        }
-    };
-
-    const handleCpm = (newValue) => {
-        const newCpm = Number(newValue);
-        setCpm(newCpm); 
-        const cps = newCpm / 60 / 4;
-        const updatedSong = songText.replace(/setcps\([^)]+\)/, `setcps(${cps})`);
-        setSongText(updatedSong);
-        
-        const editor = getGlobalEditor();
-        if (editor) {
-            editor.setCode(updatedSong);
-            if (editor.repl?.state?.started) {
-                editor.evaluate();
-            }
         }
     };
 
@@ -111,9 +93,7 @@ export default function StrudelDemo() {
                                 <label htmlFor='DJControls' className='form label text-component'>
                                     DJ Controls
                                 </label>
-                                <DJControls cpm={cpm} onCpmChange={handleCpm}/>
-                            
-                                <VolumeSlider /> 
+                                <DJControls songText={songText} setSongText={setSongText}/>
                             </div>
                         </div>
                     </div>
