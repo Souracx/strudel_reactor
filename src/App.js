@@ -1,13 +1,11 @@
 import './App.css';
 import { useEffect, useRef, useState } from "react";
 import { stranger_tune } from './tunes';
-import ProcButtons from './components/ProcButtons';
-import PreprocessTextArea from './components/PreprocessTextArea';
-import DJControls from './components/DJControls';
-import TogglePlayButton from './components/TogglePlayButton';
+import DJControlSection from './sections/DJControlSection';
 import NotificationPopUp from './components/Notification';
-import ToggleSwitch from './components/ToggleSwitch';
 import { initializeStrudel, getGlobalEditor } from './strudel.js';
+import PreprocessorSection from './sections/PreprocessorSection';
+import EditorSection from './sections/EditorSection';
 
 
 export default function StrudelDemo() {
@@ -15,7 +13,7 @@ export default function StrudelDemo() {
     const [globalEditor, setGlobalEditor] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false); 
     const [songText, setSongText] = useState(stranger_tune);
-    const [showPreprocessor, setShowPreprocessor] = useState(true);         // Handles preprocessor hiding 
+    // const [showPreprocessor, setShowPreprocessor] = useState(true);         // Handles preprocessor hiding 
     const [notification, setNotification] = useState({show: false, message:'', type:'success'});     // Notification 
 
 
@@ -64,38 +62,14 @@ export default function StrudelDemo() {
     return (
         <div style={{backgroundColor: 'rgb(18,3,3)'}}>
             <h2 style={{color: '#30B3A5'}}>Strudel Demo</h2>
-            <main>
-                <div className="container-fluid">
-                    <div className="row g-3 mb-3">
-                        <div className="col-lg-8">
-                            <div className="custom-card">
-                                <label htmlFor="exampleFormControlTextarea1" className="form-label text-component">
-                                    Text to preprocess:
-                                </label>
-                                <ProcButtons onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
-                                <TogglePlayButton globalEditor={globalEditor} songText={songText} isPlaying={isPlaying} setIsPlaying={setIsPlaying} showNotification={showNotification}/>                           
-                                <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)}label={showPreprocessor ? 'Hide' : 'Show'}/>          
-                                {showPreprocessor && (<PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>)}
-                            </div>
-                        </div>
-                        <div className="col-lg-4">
-                        </div>
+            <main className="container-fluid" style={{maxWidth: '1600px', margin: '0 auto', padding: '0 1rem'}}>
+                <div className="row g-3 mb-3">
+                    <div className="col-lg-8">
+                        <PreprocessorSection songText={songText} setSongText={setSongText} globalEditor={globalEditor} isPlaying={isPlaying} setIsPlaying={setIsPlaying} showNotification={showNotification} onProcess={handleProcess} onProcessPlay={handleProcessAndPlay}/>
+                        <EditorSection/> 
                     </div>
-                    <div className="row g-3">
-                        <div className="col-lg-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <div className='custom-card'>
-                                <div id="editor" />
-                                <div id="output" />
-                            </div> 
-                        </div>
-                        <div className="col-lg-4">
-                            <div className='custom-card'>
-                                <label htmlFor='DJControls' className='form label text-component'>
-                                    DJ Controls
-                                </label>
-                                <DJControls songText={songText} setSongText={setSongText}/>
-                            </div>
-                        </div>
+                    <div className="col-lg-4">
+                        <DJControlSection songText={songText} setSongText={setSongText} />
                     </div>
                 </div>
                 <div className='row g-3 mt-3'>
