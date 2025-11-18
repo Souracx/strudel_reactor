@@ -6,6 +6,7 @@ import NotificationPopUp from './components/Notification';
 import { initializeStrudel, getGlobalEditor } from './strudel.js';
 import PreprocessorSection from './sections/PreprocessorSection';
 import EditorSection from './sections/EditorSection';
+import PianoRollSection from './sections/PianoRollSection';
 
 
 export default function StrudelDemo() {
@@ -72,14 +73,9 @@ export default function StrudelDemo() {
                         <DJControlSection songText={songText} setSongText={setSongText} />
                     </div>
                 </div>
-                <div className='row g-3 mt-3'>
-                    <div className='custom-card'> 
-                        <canvas id="roll"></canvas>
-                    </div>
-                </div>
+                <PianoRollSection/>
             </main>
-            <NotificationPopUp message={notification.message} type={notification.type} show={notification.show}
-            /> 
+            <NotificationPopUp message={notification.message} type={notification.type} show={notification.show}/> 
         </div>
     );
 }
