@@ -215,3 +215,117 @@ small.text-muted {
   color: #888 ;
   font-size: 0.85rem;
 }
+
+/* JSON Display Styles */
+.json-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.json-btn {
+  border: 2px solid;
+  font-weight: 600;
+  padding: 6px 16px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 6px;
+}
+
+/* Save - Green for success/creation */
+.json-btn-save {
+  border-color: #00d25b;
+  color: #00d25b;
+}
+
+.json-btn-save:hover {
+  background-color: rgba(0, 210, 91, 0.15);
+  box-shadow: 0 0 10px rgba(0, 210, 91, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Load - Blue for primary action */
+.json-btn-load {
+  border-color: #0090e7;
+  color: #0090e7;
+}
+
+.json-btn-load:hover {
+  background-color: rgba(0, 144, 231, 0.15);
+  box-shadow: 0 0 10px rgba(0, 144, 231, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Export - Orange for external output */
+.json-btn-export {
+  border-color: #fc892d;
+  color: #fc892d;
+}
+
+.json-btn-export:hover {
+  background-color: rgba(252, 137, 45, 0.15);
+  box-shadow: 0 0 10px rgba(252, 137, 45, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Import - Purple for bringing in data */
+.json-btn-import {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.json-btn-import:hover {
+  background-color: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Active/Click state for all buttons */
+.json-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.json-textarea {
+  width: 100%;
+  background-color: #0d0d0d;
+  color: #d4d4d4;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 0.875rem;
+  font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.json-textarea:focus {
+  outline: none;
+  border-color: #30B3A5;
+  box-shadow: 0 0 0 2px rgba(48, 179, 165, 0.1);
+}
+
+.json-textarea::placeholder {
+  color: #5a5a5a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .json-button-container {
+    justify-content: center;
+  }
+  
+  .json-btn {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+  }
+}

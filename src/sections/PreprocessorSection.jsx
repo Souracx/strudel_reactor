@@ -3,9 +3,10 @@ import ProcButtons from "../components/ProcButtons";
 import TogglePlayButton from "../components/TogglePlayButton";
 import ToggleSwitch from "../components/ToggleSwitch";
 import PreprocessTextArea from "../components/PreprocessTextArea";
+import JsonDisplay from "../components/JsonDisplay";  
 
 
-export default function PreprocessorSection({songText,setSongText,globalEditor,isPlaying, setIsPlaying, onProcess, onProcessPlay, showNotification}){
+export default function PreprocessorSection({songText,setSongText,globalEditor,isPlaying,setIsPlaying,showNotification,presetJson,setPresetJson,onSaveClick,onLoadClick}){
 
     const[showPreprocessor,setShowPreprocessor] = useState(true); 
 
@@ -18,9 +19,13 @@ export default function PreprocessorSection({songText,setSongText,globalEditor,i
             <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:'8px', marginBottom:'16px'}}>
                 <ProcButtons songText={songText} setIsPlaying={setIsPlaying}/> 
                 <TogglePlayButton globalEditor={globalEditor} songText={songText} isPlaying={isPlaying} setIsPlaying={setIsPlaying} showNotification={showNotification}/>               
-                <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)}label={showPreprocessor ? 'Hide' : 'Show'}/>          
-            </div>
-            {showPreprocessor && (<PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>)}
+                <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)}label={showPreprocessor ? 'Show Json' : 'Show Editor'}/>          
+            </div>  
+                {showPreprocessor ? (
+                <PreprocessTextArea defaultValue={songText} onChange={(e) => setSongText(e.target.value)}/>) 
+                : (
+                <JsonDisplay presetJson={presetJson} setPresetJson={setPresetJson} onSave={onSaveClick} onLoad={onLoadClick} showNotification={showNotification}/>
+                )} 
         </div>
     ); 
 }
