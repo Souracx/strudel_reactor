@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { getGlobalEditor } from "../strudel";
 
-export default function CpmControl({songText, setSongText}){
+export default function CpmControl({songText, setSongText,cpm,setCpm}){
 
-    const[cpm, setCpm] = useState(140); 
+    // const[cpm, setCpm] = useState(140); 
 
     const handleCpm = (newValue) => { 
         const newCpm = Number(newValue)
