@@ -197,3 +197,21 @@ h2:hover {
 .toggle-switch input:checked + .toggle-slider:before {
   transform: translateX(24px);
 }
+
+.form-check-label {
+  color: #e0e0e0 ;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.form-check-label:hover {
+  color: #30B3A5 ;
+}
+
+/* Small text styles */
+small.text-muted {
+  color: #888 ;
+  font-size: 0.85rem;
+}

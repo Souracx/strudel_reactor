@@ -16,7 +16,7 @@ export default function PreprocessorSection({songText,setSongText,globalEditor,i
             </label>
 
             <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:'8px', marginBottom:'16px'}}>
-                <ProcButtons onProcess={onProcess} onProcessPlay={onProcessPlay}/> 
+                <ProcButtons songText={songText} setIsPlaying={setIsPlaying}/> 
                 <TogglePlayButton globalEditor={globalEditor} songText={songText} isPlaying={isPlaying} setIsPlaying={setIsPlaying} showNotification={showNotification}/>               
                 <ToggleSwitch isOn={showPreprocessor} onToggle={() => setShowPreprocessor(!showPreprocessor)}label={showPreprocessor ? 'Hide' : 'Show'}/>          
             </div>
