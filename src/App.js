@@ -19,7 +19,7 @@ export default function StrudelDemo() {
     const [cpm, setCpm] = useState((140)); 
 
         // Save preset wrapper
-    const savePresetToJson = () => {handleSavePreset({ cpm, setPresetJson, showNotification });};
+    const savePresetToJson = () => {handleSavePreset({ cpm, songText, setPresetJson, showNotification });};
     
         // Load preset wrapper
     const loadPresetFromJson = () => {handleLoadPreset({ presetJson, songText, setCpm, setSongText, showNotification });};
