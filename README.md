@@ -2,69 +2,147 @@
 
 This is a React-based preprocessor and UI for Strudel.cc, a live coding music platorm. The application provides a intuitive interface for controlling and manipulating music in real time through features provided. 
 
-## Available Scripts
+- Playback (Play / Stop)
+- Song speed (CPM)
+- Mixer controls (toggle instrument sections)
+- JSON preset saving/loading/import/export
+- Preprocessing logic
+- A Piano Roll visualization
+- A Strudel code editor with live WebAudio output
 
-In the project directory, you can run:
+The project demonstrates component-based design, clean data flow, and modern React principles.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Main Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+###  1. CPM Control  
+**Component:** `CpmControl.jsx`  
+- Adjusts song speed (CPM → converted to CPS)  
+- Automatically updates the `setcps()` call in `songText`  
+- Updates the Strudel editor live  
+- Includes **Reset** (restores default 140 CPM)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+###  2. Mixer Controls (Instrument On/Off)  
+**Component:** `SoundBoardControls.jsx`  
+Controls 4 instruments:
 
-### `npm run build`
+- Bassline  
+- Arpeggiator  
+- Drums  
+- Drums2  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Muting works by applying underscore prefixes inside the Strudel code:
+- `bassline:` -> `_bassline:`  
+- Removes underscores when re-enabled  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Updates are reflected instantly in both `songText` and the Strudel editor.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+###  3. Preprocessor Section  
+**Component:** `PreprocessorSection.jsx`  
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Includes:
+- **Preprocess** button  
+- **Preprocess & Play** button  
+- **Play/Pause toggle**  
+- **Text editor ↔ JSON editor switch**  
+- Live song text editing  
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This is the core interaction panel for the user.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+###  4. Play / Stop Button  
+**Component:** `TogglePlayButton.jsx`  
 
-## Learn More
+- Starts the Strudel playback  
+- Stops playback  
+- Detects if the editor is not ready or if no code exists  
+- Provides feedback through notifications  
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+###  5. JSON Preset Handling  
+**Components & Utilities:**  
+- `JsonDisplay.jsx`  
+- `jsonHandlers.js`  
+- `jsonPreset.js`  
 
-### Code Splitting
+Supports four key functions:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Supports four key functions:
 
-### Analyzing the Bundle Size
+#### ✔ Save to JSON  
+Stores:
+- CPM  
+- Mixer state  
+- Timestamp  
+- Version  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### ✔ Load from JSON  
+Updates:
+- CPM  
+- setcps() in song text  
+- Mixer prefixes  
+- Updates the Strudel editor
 
-### Making a Progressive Web App
+#### ✔ Export JSON  
+Creates a downloadable `.json` file.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+#### ✔ Import JSON  
+Reads a JSON file and loads it into the UI.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+###  6. Strudel Code Editor  
+**Component:** `EditorSection.jsx`
 
-### Deployment
+- Uses the StrudelMirror REPL  
+- Displays live Strudel code  
+- Automatically updates when `songText` changes  
+- Runs evaluation on playback  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+###  7. Piano Roll Visualization  
+**Component:** `PianoRollSection.jsx`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Uses Strudel’s `drawPianoroll()`  
+- Displays real-time note visualization on a canvas  
+- Reflects the currently playing pattern  
+
+---
+
+###  8. Notifications  
+**Component:** `Notification.jsx`  
+
+Shows:
+- Success  
+- Error  
+- Warning  
+- Info  
+
+Used throughout JSON operations, preprocessing, and playback.
+
+---
+
+##  Song Used  
+The default song is **stranger_tune** from `tunes.js`.
+
+This is a remix of work by **Algorave Dave**.  
+Original inspiration: https://www.youtube.com/watch?v=ZCcpWzhekEY
+
+---
+
+## Demonstration Video  
+https://www.youtube.com/watch?v=scfQUrYoYTI
+---
+
+## AI Usage Declaration 
+I used Claude to understand parts of the Strudel codebase, specifically to help explain how Strudel’s REPL, playback, and preprocessing functions work. 
+---
+
