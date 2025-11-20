@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { getGlobalEditor } from '../strudel';
 
 export default function SoundBoardControls({ songText, setSongText }) {
@@ -7,6 +7,13 @@ export default function SoundBoardControls({ songText, setSongText }) {
     const [arpeggiator, setArpeggiator] = useState(true);
     const [drums, setDrums] = useState(true);
     const [drums2, setDrums2] = useState(true);
+
+    useEffect(() => {
+        setBass(!songText.includes('_bassline:'));
+        setArpeggiator(!songText.includes('_main_arp:'));
+        setDrums(!songText.includes('_drums:'));
+        setDrums2(!songText.includes('_drums2:'));
+    }, [songText]);
 
     const toggleSection = (section, isEnabled) => {
         // Update state first
@@ -39,7 +46,8 @@ export default function SoundBoardControls({ songText, setSongText }) {
 
         if (!setStates.drums) {updatedSong = updatedSong.replace(/^drums:/gm, '_drums:');}
 
-        if (!setStates.drums2) {updatedSong = updatedSong.replace(/^drums2:/gm, '_drums2:');}
+        if (!setStates.drums2) {updatedSong = updatedSong.replace(/^drums2:/gm, '_drums2:');
+}
 
         // Update the parent component's song text
         setSongText(updatedSong);
