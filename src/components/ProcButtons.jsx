@@ -1,12 +1,13 @@
 import { getGlobalEditor } from "../strudel";
 
-function ProcButtons ({songText, setIsPlaying}){
+function ProcButtons ({songText, setIsPlaying,showNotification}){
 
     const handleProcess = () => { 
         const editor = getGlobalEditor();
         if (editor) {
             editor.setCode(songText);
         }
+        showNotification('Preprocess successful','success'); 
     };
 
     const handleProcessAndPlay = () => {
@@ -16,13 +17,14 @@ function ProcButtons ({songText, setIsPlaying}){
             editor.setCode(songText);
             editor.evaluate();
         }
+        showNotification('Processed successfully play started','success'); 
     };
 
     return (
         <> 
-         <div className="btn-group" role="group" aria-label="Basic example">
-            <button id="process" className="btn btn-outline-primary" onClick={handleProcess}>Preprocess</button>
-            <button id="process_play" className="btn btn-outline-primary" onClick={handleProcessAndPlay}>Proc & Play</button>
+         <div className="process-btn-group" role="group" aria-label="Basic example">
+            <button id="process" className="process-btn preprocess" onClick={handleProcess}>Preprocess</button>
+            <button id="process_play" className="process-btn proc-play" onClick={handleProcessAndPlay}>Proc & Play</button>
         </div>
         </>
     ); 
