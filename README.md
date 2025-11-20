@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Project Overview 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a React-based preprocessor and UI for Strudel.cc, a live coding music platorm. The application provides a intuitive interface for controlling and manipulating music in real time through features provided. 
 
 ## Available Scripts
 
