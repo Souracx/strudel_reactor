@@ -12,6 +12,8 @@ This is a React-based preprocessor and UI for Strudel.cc, a live coding music pl
 
 The project demonstrates component-based design, clean data flow, and modern React principles.
 
+**Video Demonstration:** https://www.youtube.com/watch?v=scfQUrYoYTI
+
 ---
 
 ## Main Features
@@ -131,6 +133,7 @@ Used throughout JSON operations, preprocessing, and playback.
 ---
 
 ##  Song Used  
+
 The default song is **stranger_tune** from `tunes.js`.
 
 This is a remix of work by **Algorave Dave**.  
@@ -138,11 +141,9 @@ Original inspiration: https://www.youtube.com/watch?v=ZCcpWzhekEY
 
 ---
 
-## Demonstration Video  
-https://www.youtube.com/watch?v=scfQUrYoYTI
----
-
 ## AI Usage Declaration 
+
 I used Claude to understand parts of the Strudel codebase, specifically to help explain how Strudel’s REPL, playback, and preprocessing functions work. 
+
 ---
 
